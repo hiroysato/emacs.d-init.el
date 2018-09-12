@@ -617,6 +617,10 @@
 (setq isearch-case-fold-search t)
 
 
+;; 起動画面を非表示にする
+(setq inhibit-splash-screen t)
+
+
 ;; --------------------------------------------------
 ;; language
 ;; --------------------------------------------------
@@ -952,6 +956,8 @@ Added: %U" :prepend t :clock-in t :clock-resume t)))
 
 ;; -------------------------------------------------------
 ;;                       slime
+;; slime-company は use-package で install できなかったので
+;; package-list-packages から slime-company を探して手動でインストールした
 ;; -------------------------------------------------------
 (use-package slime
   :ensure t
@@ -961,6 +967,16 @@ Added: %U" :prepend t :clock-in t :clock-resume t)))
     (slime-setup '(slime-fancy slime-company))
     (use-package slime-company
       :ensure t)))
+
+
+
+
+;; -------------------------------------------------------
+;;                       cl
+;; 色々と便利なので Common Lisp マクロパッケージを読み込んでおく
+;; -------------------------------------------------------
+(require 'cl)
+
 
 
 ;;;; -------------------------------------------------------
