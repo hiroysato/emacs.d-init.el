@@ -886,6 +886,46 @@ redrawが non-nilの場合は、Windowを再描画します。"
 
 
 ;; -------------------------------------------------------
+;;                       eww
+;; -------------------------------------------------------
+;;;; N (eww-next-url)
+;;;; P (eww-previous-url)
+;;;; l (eww-back-url)
+;;;; r (eww-forward-url)
+;;;; H (eww-list-histories)
+;;;; & (eww-browse-with-external-browser)
+;;;; b (eww-add-bookmark)
+;;;; B (eww-list-bookmarks)
+;;;; q (quit-window)
+;;;; https://futurismo.biz/archives/2950
+(use-package eww
+  :config
+  (bind-keys :map eww-mode-map
+             ("r" . eww-reload)
+             ("c 0" eww-copy-page-url)
+             ("p" scroll-down)
+             ("n" scroll-up))
+  (setq eww-search-prefix "https://duckduckgo.com/html/?kl=jp-jp&k1=-1&kc=1&kf=-1&q="))
+(defun eww-disable-images ()
+  "eww で画像表示させない"
+  (interactive)
+  (setq-local shr-put-image-function 'shr-put-image-alt)
+  (eww-reload))
+(defun eww-enable-images ()
+  "eww で画像表示させる"
+  (interactive)
+  (setq-local shr-put-image-function 'shr-put-image)
+  (eww-reload))
+(defun shr-put-image-alt (spec alt &optional flags)
+  (insert alt))
+;; はじめから非表示
+(defun eww-mode-hook--disable-image ()
+  (setq-local shr-put-image-function 'shr-put-image-alt))
+(add-hook 'eww-mode-hook 'eww-mode-hook--disable-image)
+
+
+
+;; -------------------------------------------------------
 ;;                       org
 ;; -------------------------------------------------------
 ;;;; C-c C-x C-i ==> Clock-in
@@ -899,7 +939,8 @@ redrawが non-nilの場合は、Windowを再描画します。"
          ("C-c c" . org-capture)
          ("C-c b" . org-iswitchb))
   :config
-  (setq org-directory "~/org/")
+  ;; (setq org-directory "~/org/")
+  (setq org-directory "D:/Users/xiroh/Documents/org/")
   (setq org-agenda-files (list org-directory))      ; orgs ディレクトリ以下を org-agenda の対象にする
   (setq org-todo-keywords
         '((sequence "TODO(t)" "WAIT(w)" "NOTE(n)"  "|" "DONE(d)" "SOMEDAY(s)" "CANCEL(c)")))
@@ -909,11 +950,12 @@ redrawが non-nilの場合は、Windowを再描画します。"
   (setq org-capture-templates
         ;; http://members.optusnet.com.au/~charles57/GTD/datetree.html
         '(("j" "Journal Entry" entry (file+datetree (expand-file-name "Journal.org" org-directory))
-           "** %^{Heading}" :clock-in t :clock-resume t)
+           "** %^{Heading}\n%?" :clock-in t :clock-resume t)
           ("t" "Task Entry" entry (file+headline (expand-file-name "Task.org" org-directory) "Tasks")
-           "** TODO %^{Description}  %^g
-%?
-Added: %U" :prepend t :clock-in t :clock-resume t)))
+           "** TODO %^{Description}  %^g\n%?\nAdded: %U" :clock-in t :clock-resume t)
+          ("m" "Meeting Entry" entry (file+datetree (expand-file-name "Meeting.org" org-directory))
+           "* %^{会議名} %^g\n【目　的】%^{目的}\n【場　所】%^{場所}\n【参加者】%^{参加者}\n** アジェンダ\n%?\n** 決定事項\n** 議事内容\n\n" :prepent t :clock-in t :clock-resume t)
+          ))
   (add-hook 'org-timer-done-hook
             (lambda ()
               (save-excursion
