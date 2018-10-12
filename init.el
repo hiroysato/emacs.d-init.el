@@ -933,12 +933,31 @@ redrawが non-nilの場合は、Windowを再描画します。"
 ;;;; C-c C-x ;   ==> Timer-set
 ;;;; C-c C-x C-d ==> 集計
 ;;;; http://lioon.net/org-mode-awesome-timer-and-clock
+;;;;
+;;;; You can configure how Org handles file links by customizing the variable org-file-apps.
+;;;; By default Org will check auto-mode-alist and open the file in Emacs if it finds a match. If you would rather use the default system application for .xls files you can add something like this to your init file:
+;;;; (add-to-list 'org-file-apps '("\\.xls\\'" . default))
+;;;;
+;;;; You can also use prefix arguments to choose how to open a link on a case-by-case basis:
+;;;;
+;;;; C-c C-o will open the link according to your configuration
+;;;; C-u C-c C-o will visit the file in Emacs
+;;;; C-u C-u C-c C-o will let the system decide how to open the file
+;;;; https://emacs.stackexchange.com/questions/2708/relative-path-link-to-xls-file-from-org-mode
 (use-package org
   :bind (("C-c l" . org-store-link)
          ("C-c a" . org-agenda)
          ("C-c c" . org-capture)
          ("C-c b" . org-iswitchb))
   :config
+  (org-babel-do-load-languages
+   'org-babel-load-languages
+   '((python . t)
+     (sql    . t)
+     (ruby   . t)))
+  (add-to-list 'org-file-apps '("\\.xls\\'" . default))
+  (add-to-list 'org-file-apps '("\\.xlsx\\'" . default))
+
   ;; (setq org-directory "~/org/")
   (setq org-directory "D:/Users/xiroh/Documents/org/")
   (setq org-agenda-files (list org-directory))      ; orgs ディレクトリ以下を org-agenda の対象にする
