@@ -1,5 +1,5 @@
 ;;;; ;; OS によって設定を切り替える例
-;;;; (when (eq system-type 'windows-nt) ; Windows
+;;;; (when (eq system-type 'windows-nt) ; Windows、Linux の場合は「x」
 ;;;;     ;; ←Win用設定を、ここに記述
 ;;;; )
 ;;;;
@@ -46,27 +46,30 @@
 (setq eol-mnemonic-unix ":LF")
 
 
+(when (eq system-type 'windows-nt) ; Windows
+    ;; ←Win用設定を、ここに記述
 ;;; ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;; ;;;
 ;;; @ key binding - keyboard                                        ;;;
 ;;; ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;; ;;;
 
-;; Altキーを使用せずにMetaキーを使用（有効：t、無効：nil）
-(setq w32-alt-is-meta t)
+  ;; Altキーを使用せずにMetaキーを使用（有効：t、無効：nil）
+  (setq w32-alt-is-meta t)
 
 
 ;;; ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;; ;;;
 ;;; @ language - input method                                       ;;;
 ;;; ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;; ;;;
-
-;; モードラインの表示文字列
-(setq-default w32-ime-mode-line-state-indicator "[Aa] ")
-(setq w32-ime-mode-line-state-indicator-list '("[Aa]" "[あ]" "[Aa]"))
-
-;; IME初期化
-(w32-ime-initialize)
-
-;; デフォルトIME
-(setq default-input-method "W32-IME")
+  
+  ;; モードラインの表示文字列
+  (setq-default w32-ime-mode-line-state-indicator "[Aa] ")
+  (setq w32-ime-mode-line-state-indicator-list '("[Aa]" "[あ]" "[Aa]"))
+  
+  ;; IME初期化
+  (w32-ime-initialize)
+  
+  ;; デフォルトIME
+  (setq default-input-method "W32-IME")
+  )
 
 ;; IME変更
 (global-set-key (kbd "C-\\") 'toggle-input-method)
@@ -76,27 +79,6 @@
 (global-set-key (kbd "<kanji>") 'ignore)
 
 
-;;; ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;; ;;;
-;;; @ language - fontset                                            ;;;
-;;; ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;; ;;;
-;; 
-;; ;; デフォルト フォント
-;; ;; (set-face-attribute 'default nil :family "Migu 1M" :height 110)
-;; (set-face-font 'default "Migu 1M-11:antialias=standard")
-;; 
-;; ;; プロポーショナル フォント
-;; ;; (set-face-attribute 'variable-pitch nil :family "Migu 1M" :height 110)
-;; (set-face-font 'variable-pitch "Migu 1M-11:antialias=standard")
-;; 
-;; ;; 等幅フォント
-;; ;; (set-face-attribute 'fixed-pitch nil :family "Migu 1M" :height 110)
-;; (set-face-font 'fixed-pitch "Migu 1M-11:antialias=standard")
-;; 
-;; ;; ツールチップ表示フォント
-;; ;; (set-face-attribute 'tooltip nil :family "Migu 1M" :height 90)
-;; (set-face-font 'tooltip "Migu 1M-9:antialias=standard")
-;; 
-;;; fontset
 
 ;; フォントサイズ調整
 (global-set-key (kbd "C-<wheel-up>")   '(lambda() (interactive) (text-scale-increase 1)))
@@ -109,27 +91,6 @@
 
 ;; 調整
 (setq-default indent-tabs-mode nil)
-
-;;; ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;; ;;;
-;;; @ screen - frame                                                ;;;
-;;; ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;; ;;;
-
-(setq default-frame-alist
-      (append '((width                . 85)  ; フレーム幅
-                (height               . 38 ) ; フレーム高
-             ;; (left                 . 70 ) ; 配置左位置
-             ;; (top                  . 28 ) ; 配置上位置
-                (line-spacing         . 0  ) ; 文字間隔
-                (left-fringe          . 10 ) ; 左フリンジ幅
-                (right-fringe         . 11 ) ; 右フリンジ幅
-                (menu-bar-lines       . 1  ) ; メニューバー
-                (tool-bar-lines       . 1  ) ; ツールバー
-                (vertical-scroll-bars . 1  ) ; スクロールバー
-                (scroll-bar-width     . 17 ) ; スクロールバー幅
-                (cursor-type          . box) ; カーソル種別
-                (alpha                . 100) ; 透明度
-                ) default-frame-alist) )
-(setq initial-frame-alist default-frame-alist)
 
 ;; フレーム タイトル
 (setq frame-title-format
@@ -215,18 +176,20 @@
 (setq uniquify-ignore-buffers-re "*[^*]+*")
 
 
+(when (eq system-type 'windows-nt) ; Windows
+    ;; ←Win用設定を、ここに記述
 ;;; ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;; ;;;
 ;;; @ screen - minibuffer                                           ;;;
 ;;; ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;; ;;;
 
-;; minibufferのアクティブ時、IMEを無効化
-(add-hook 'minibuffer-setup-hook
-          (lambda ()
-            (deactivate-input-method)))
-(wrap-function-to-control-ime 'y-or-n-p nil nil)
-(wrap-function-to-control-ime 'map-y-or-n-p nil nil)
-(wrap-function-to-control-ime 'read-char nil nil)
-
+  ;; minibufferのアクティブ時、IMEを無効化
+  (add-hook 'minibuffer-setup-hook
+            (lambda ()
+              (deactivate-input-method)))
+  (wrap-function-to-control-ime 'y-or-n-p nil nil)
+  (wrap-function-to-control-ime 'map-y-or-n-p nil nil)
+  (wrap-function-to-control-ime 'read-char nil nil)
+  )
 
 ;;; ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;; ;;;
 ;;; @ screen - cursor                                               ;;;
@@ -238,44 +201,38 @@
 ;; 非アクティブウィンドウのカーソル表示（有効：t、無効：nil）
 (setq-default cursor-in-non-selected-windows t)
 
-;; evil-mode 側の設定で色を変更するようにしたため
-;; （google 日本語入力がポップアップで通知してくれるのでそもそも不要）
-;;
-;; ;; IME無効／有効時のカーソルカラー定義
-;; (unless (facep 'cursor-ime-off)
-;;   (make-face 'cursor-ime-off)
-;;   (set-face-attribute 'cursor-ime-off nil
-;;                       :background "DarkRed" :foreground "White")
-;;   )
-;; (unless (facep 'cursor-ime-on)
-;;   (make-face 'cursor-ime-on)
-;;   (set-face-attribute 'cursor-ime-on nil
-;;                       :background "DarkGreen" :foreground "White")
-;;   )
-;;
-;; ;; IME無効／有効時のカーソルカラー設定
-;; (advice-add 'ime-force-on
-;;             :before (lambda (&rest args)
-;;                       (if (facep 'cursor-ime-on)
-;;                           (let ( (fg (face-attribute 'cursor-ime-on :foreground))
-;;                                  (bg (face-attribute 'cursor-ime-on :background)) )
-;;                             (set-face-attribute 'cursor nil :foreground fg :background bg) )
-;;                         )
-;;                       ))
-;; (advice-add 'ime-force-off
-;;             :before (lambda (&rest args)
-;;                       (if (facep 'cursor-ime-off)
-;;                           (let ( (fg (face-attribute 'cursor-ime-off :foreground))
-;;                                  (bg (face-attribute 'cursor-ime-off :background)) )
-;;                             (set-face-attribute 'cursor nil :foreground fg :background bg) )
-;;                         )
-;;                       ))
-;; 
-;; ;; バッファ切り替え時の状態引継ぎ設定（有効：t、無効：nil）
-;; (setq w32-ime-buffer-switch-p t)
+;; IME無効／有効時のカーソルカラー定義
+(unless (facep 'cursor-ime-off)
+  (make-face 'cursor-ime-off)
+  (set-face-attribute 'cursor-ime-off nil
+                      :background "DarkRed" :foreground "White")
+  )
+(unless (facep 'cursor-ime-on)
+  (make-face 'cursor-ime-on)
+  (set-face-attribute 'cursor-ime-on nil
+                      :background "DarkGreen" :foreground "White")
+  )
+
+;; IME無効／有効時のカーソルカラー設定
+(advice-add 'ime-force-on
+            :before (lambda (&rest args)
+                      (if (facep 'cursor-ime-on)
+                          (let ( (fg (face-attribute 'cursor-ime-on :foreground))
+                                 (bg (face-attribute 'cursor-ime-on :background)) )
+                            (set-face-attribute 'cursor nil :foreground fg :background bg) )
+                        )
+                      ))
+(advice-add 'ime-force-off
+            :before (lambda (&rest args)
+                      (if (facep 'cursor-ime-off)
+                          (let ( (fg (face-attribute 'cursor-ime-off :foreground))
+                                 (bg (face-attribute 'cursor-ime-off :background)) )
+                            (set-face-attribute 'cursor nil :foreground fg :background bg) )
+                        )
+                      ))
 
 
-;;; ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;; ;;;
+;; ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;; ;;;
 ;;; @ screen - linum                                                ;;;
 ;;; ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;; ;;;
 
@@ -308,46 +265,12 @@
 (set-face-attribute 'linum nil :height 0.75)
 
 
-;; ;;; ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;; ;;;
-;; ;;; @ screen - tabbar                                               ;;;
-;; ;;; ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;; ;;;
-;;
-;; (require 'tabbar)
-;;
-;; ;; tabbar有効化（有効：t、無効：nil）
-;; (call-interactively 'tabbar-mode t)
-;;
-;; ;; ボタン非表示
-;; (dolist (btn '(tabbar-buffer-home-button
-;;                tabbar-scroll-left-button
-;;                tabbar-scroll-right-button))
-;;   (set btn (cons (cons "" nil) (cons "" nil)))
-;;   )
-;;
-;; ;; タブ切替にマウスホイールを使用（有効：0、無効：-1）
-;; (call-interactively 'tabbar-mwheel-mode -1)
-;; (remove-hook 'tabbar-mode-hook      'tabbar-mwheel-follow)
-;; (remove-hook 'mouse-wheel-mode-hook 'tabbar-mwheel-follow)
-;;
-;; ;; タブグループを使用（有効：t、無効：nil）
-;; (defvar tabbar-buffer-groups-function nil)
-;; (setq tabbar-buffer-groups-function nil)
-;;
-;; ;; タブの表示間隔
-;; (defvar tabbar-separator nil)
-;; (setq tabbar-separator '(1.0))
-;;
-;; ;; タブ切り替え
-;; (global-set-key (kbd "<C-tab>") 'tabbar-forward-tab)
-;; (global-set-key (kbd "C-q")     'tabbar-backward-tab)
-;;
-;;
 ;;; ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;; ;;;
 ;;; @ search - isearch                                              ;;;
 ;;; ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;; ;;;
 
 ;; 大文字・小文字を区別しないでサーチ（有効：t、無効：nil）
-(setq-default case-fold-search nil)
+(setq-default case-fold-search t)
 
 ;; インクリメント検索時に縦スクロールを有効化（有効：t、無効：nil）
 (setq isearch-allow-scroll nil)
@@ -383,45 +306,6 @@
  )
 
 
-;; ;;; ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;; ;;;
-;; ;;; @ screen - hiwin                                                ;;;
-;; ;;; ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;; ;;;
-;;
-;; (require 'hiwin)
-;;
-;; ;; hiwin-modeを有効化
-;; (hiwin-activate)
-;;
-;;
-;; ;;; ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;; ;;;
-;; ;;; @ search - migemo                                               ;;;
-;; ;;;   https://github.com/emacs-jp/migemo                            ;;;
-;; ;;; ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;; ;;;
-;;
-;; (setq search-default-mode nil)
-;; (setq search-default-regexp-mode nil)
-;;
-;; (require 'migemo)
-;;
-;; (defvar migemo-command nil)
-;; (setq migemo-command "cmigemo")
-;;
-;; (defvar migemo-options nil)
-;; (setq migemo-options '("-q" "--emacs"))
-;;
-;; (defvar migemo-dictionary nil)
-;; (setq migemo-dictionary "/usr/local/share/migemo/utf-8/migemo-dict")
-;;
-;; (defvar migemo-user-dictionary nil)
-;;
-;; (defvar migemo-regex-dictionary nil)
-;;
-;; (defvar migemo-coding-system nil)
-;; (setq migemo-coding-system 'utf-8-unix)
-;;
-;; (load-library "migemo")
-;;
-;;
 ;;; ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;; ;;;
 ;;; @ file - backup                                                 ;;;
 ;;; ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;; ;;;
@@ -498,8 +382,8 @@
 ;; 横スクロール時の列数
 (setq hscroll-step 1)
 
-;; スクロールダウン
-(global-set-key (kbd "C-z") 'scroll-down)
+;; ;; スクロールダウン
+;; (global-set-key (kbd "C-z") 'scroll-down)
 
 ;; バッファの最後までスクロールダウン
 (defadvice scroll-down (around scroll-down activate compile)
@@ -527,69 +411,6 @@
       ad-do-it) ))
 
 
-;; ;;; ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;; ;;;
-;; ;;; @ shell                                                         ;;;
-;; ;;; ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;; ;;;
-;;
-;; (require 'shell)
-;; (setq explicit-shell-file-name "bash.exe")
-;; (setq shell-command-switch "-c")
-;; (setq shell-file-name "bash.exe")
-;; ;; (setq explicit-bash.exe-args '("--login" "-i"))
-;;
-;; ;; (M-! and M-| and compile.el)
-;; (setq shell-file-name "bash.exe")
-;; (modify-coding-system-alist 'process ".*sh\\.exe" 'utf-8)
-;;
-;;
-;;; ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;; ;;;
-;;; @ package manager                                               ;;;
-;;; ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;; ;;;
-
-(require 'package)
-(add-to-list 'package-archives
-             '("melpa" . "http://melpa.milkbox.net/packages/") t)
-(add-to-list 'package-archives
-             '("marmalade" . "http://marmalade-repo.org/packages/"))
-(package-initialize)
-
-
-;; ;;; ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;; ;;;
-;; ;;; @ theme                                                         ;;;
-;; ;;; ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;; ;;;
-;;
-;; ;; テーマ格納ディレクトリのパス追加
-;; (add-to-list 'custom-theme-load-path
-;;              (file-name-as-directory (concat user-emacs-directory "theme"))
-;;              )
-;;
-;; ;; テーマ選択
-;; ;; (load-theme 'solarized-light t)
-;; ;; (load-theme 'solarized-dark t)
-;; (load-theme 'gnupack-dark t)
-;;
-;;
-;; ;;; ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;; ;;;
-;; ;;; @ server                                                        ;;;
-;; ;;; ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;; ;;;
-;;
-;; ;; emacs-server起動
-;; (require 'server)
-;; (defun server-ensure-safe-dir (dir) "Noop" t)
-;; (setq server-socket-dir "~/.emacs.d")
-;; (unless (server-running-p)
-;;   (server-start)
-;; )
-;;
-;;; (provide 'init)
-;;; init.el ends here
-
-;; Local Variables:
-;; coding: utf-8
-;; mode: emacs-lisp
-;; End:
-
-
 ;; --------------------------------------------------
 ;; initialize
 ;; --------------------------------------------------
@@ -599,7 +420,6 @@
 (global-auto-revert-mode 1)        ; 自動読み込み
 (keyboard-translate ?\C-h ?\C-?)   ; Backspace
 (fset 'yes-or-no-p 'y-or-n-p)      ; 選択肢を y-n にする
-(setq auto-save-default nil)       ; オートセーブファイルを作らない
 (setq completion-ignore-case t)    ; file名の補完で大文字小文字を区別しない
 
 (global-set-key (kbd "C-o") 'toggle-input-method)
@@ -608,13 +428,6 @@
 ;; load-path で ~/.emacs.d とか書かなくてよくなる
 (when load-file-name
   (setq user-emacs-directory (file-name-directory load-file-name)))
-
-
-;; 検索(全般)時には大文字小文字の区別をしない
-(setq case-fold-search t)
-
-;; インクリメンタルサーチ時には大文字小文字の区別をしない
-(setq isearch-case-fold-search t)
 
 
 ;; 起動画面を非表示にする
@@ -647,11 +460,11 @@
 ;; package
 ;; --------------------------------------------------
 (require 'package)
-(package-initialize)
 (setq package-archives
       '(("gnu" . "http://elpa.gnu.org/packages/")
         ("melpa" . "http://melpa.org/packages/")
         ("org" . "http://orgmode.org/elpa/")))
+(package-initialize)
 
 
 ;; --------------------------------------------------
@@ -673,25 +486,30 @@
   :init
   (add-hook 'emacs-lisp-mode-hook 'auto-compile-mode))
 
+;;;; (if window-system (progn
+;;;;     ;; ←GUI用設定を、ここに記述
 
+
+
+(eq window-system 'x)
+;;;; (if window-system (progn
+;;;;     ;; ←GUI用設定を、ここに記述
+;;;; ))
+
+(when (eq system-type 'x) ; Linux
 ;; --------------------------------------------------
 ;; mozc
 ;; https://miyazakikenji.wordpress.com/2015/08/11/ac-mozc-on-emacs25-in-ubuntu/
 ;; --------------------------------------------------
-; (use-package mozc
-;   :config
-;   (setq default-input-method "japanese-mozc")
-;   (bind-key* "C-o" 'toggle-input-method)
-;   (custom-set-variables '(mozc-leim-title "あ"))
-;   (add-hook 'input-method-activate-hook '(lambda () (set-cursor-color "DarkGreen")))
-;   (add-hook 'input-method-inactivate-hook '(lambda () (set-cursor-color "DarkRed")))
-;   )
-;
-; (use-package mozc-popup
-;   :config
-;   (setq mozc-candidate-style 'popup)
-;   )
-(set-cursor-color "purple")
+  (use-package mozc
+    :config
+    (setq default-input-method "japanese-mozc")
+    (bind-key* "C-o" 'toggle-input-method)
+    (custom-set-variables '(mozc-leim-title "あ"))
+    (add-hook 'input-method-activate-hook '(lambda () (set-cursor-color "DarkGreen")))
+    (add-hook 'input-method-inactivate-hook '(lambda () (set-cursor-color "DarkRed")))
+    )
+  )
 
 
 ;; --------------------------------------------------
@@ -866,14 +684,6 @@ redrawが non-nilの場合は、Windowを再描画します。"
   (global-whitespace-mode 1)
   )
 
-;; -------------------------------------------------------
-;;                       hiwin
-;; -------------------------------------------------------
-; (use-package hiwin
-;   :ensure t
-;   :config
-;   (hiwin-activate)
-;   )
 
 ;; -------------------------------------------------------
 ;;                       yasnippet
@@ -922,7 +732,6 @@ redrawが non-nilの場合は、Windowを再描画します。"
 (defun eww-mode-hook--disable-image ()
   (setq-local shr-put-image-function 'shr-put-image-alt))
 (add-hook 'eww-mode-hook 'eww-mode-hook--disable-image)
-
 
 
 ;; -------------------------------------------------------
@@ -1030,36 +839,9 @@ redrawが non-nilの場合は、Windowを再描画します。"
       :ensure t)))
 
 
-
-
 ;; -------------------------------------------------------
 ;;                       cl
 ;; 色々と便利なので Common Lisp マクロパッケージを読み込んでおく
 ;; -------------------------------------------------------
 (require 'cl)
 
-
-
-;;;; -------------------------------------------------------
-;;;;                       evil
-;;;; -------------------------------------------------------
-;;(use-package evil
-;;  :ensure t
-;;  :init
-;;  (setq evil-insert-state-cursor '(bar "yellow"))
-;;  (setq evil-normal-state-cursor '(box "#E74C3C"))
-;;  (setq evil-emacs-state-cursor  '(box "purple"))
-;;  ;; modes to map to different default states
-;;  (dolist (mode-map '((ag-mode . emacs)
-;;                      (cider-repl-mode . emacs)
-;;                      (comint-mode . emacs)
-;;                      (eshell-mode . emacs)
-;;                      (fundamental-mode . emacs)
-;;                      (git-commit-mode . insert)
-;;                      (git-rebase-mode . emacs)
-;;                      (help-mode . emacs)
-;;                      (paradox-menu-mode . emacs)
-;;                      (term-mode . emacs)))
-;;    (evil-set-initial-state `,(car mode-map) `,(cdr mode-map)))
-;;  :config
-;;  (evil-mode))
