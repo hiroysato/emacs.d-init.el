@@ -59,14 +59,14 @@
 ;;; ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;; ;;;
 ;;; @ language - input method                                       ;;;
 ;;; ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;; ;;;
-  
+
   ;; モードラインの表示文字列
   (setq-default w32-ime-mode-line-state-indicator "[Aa] ")
   (setq w32-ime-mode-line-state-indicator-list '("[Aa]" "[あ]" "[Aa]"))
-  
+
   ;; IME初期化
   (w32-ime-initialize)
-  
+
   ;; デフォルトIME
   (setq default-input-method "W32-IME")
   )
@@ -99,6 +99,11 @@
 ;; 初期画面の非表示（有効：t、無効：nil）
 (setq inhibit-startup-message nil)
 (setq inhibit-startup-screen nil)
+
+;; 初期表示のウィンドウサイズ
+(add-to-list 'default-frame-alist '(width  . 145))
+(add-to-list 'default-frame-alist '(height . 45))
+
 
 ;; フルスクリーン化
 (global-set-key (kbd "<M-return>") 'toggle-frame-fullscreen)
@@ -663,7 +668,7 @@ redrawが non-nilの場合は、Windowを再描画します。"
           trailing)
     whitespace-display-mappings
         '(;; (space-mark   ?\    [?\xB7])
-          (space-mark   ?\x3000    [?\□])
+          ;; (space-mark   ?\x3000    [?\□])
           (newline-mark ?\n   [?\↲ ?\n] )
           ;; WARNING: the mapping below has a problem.
           ;; When a TAB occupies exactly one column, it will display the
